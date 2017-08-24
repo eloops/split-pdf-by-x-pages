@@ -2,8 +2,11 @@
 setlocal EnableDelayedExpansion
 setlocal EnableExtensions
 
-REM output folder location & split number
-set tempfolder=C:\tmp
+:: Get source directory script is running from and change to it
+for /f "delims= tokens=*" %%i in ("%0") do set srcdir=%%~dpi
+cd "%srcdir%
+
+REM split by this number
 set pagesplit=2
 
 REM program locations
@@ -49,9 +52,9 @@ for /l %%c in (1,%pagesplit%,%pages%) do (
   
   REM actually perform the split using cpdf
   echo Splitting pages %%c to !pagelim! from %input%
-  "%cpdf%" "%input%" %%c-!pagelim! -o "%tempfolder%\splitpdf-!zcount!.pdf" 2>NUL
+  "%cpdf%" "%input%" %%c-!pagelim! -o "%srcdir%splitpdf-!zcount!.pdf" 2>NUL
   REM if you're using pdftk change the line to below
-  REM "%pdftk%" "%input%" cat %%c-!pagelim! output "%tempfolder%\splitpdf-!count!-!newtime!.pdf"
+  REM "%pdftk%" "%input%" cat %%c-!pagelim! output "%srcdir%splitpdf-!count!-!newtime!.pdf"
 
   set /a count+=1
 )
