@@ -32,9 +32,6 @@ for /f "tokens=1,2" %%a in ('%pdfi% ^"%input%^" ^| find ^"Pages^"') do (
   set pages=!pages: =!
 )
 
-REM create our temp folder silently. if it already exists we don't need to know
-mkdir "%tempfolder%" >nul 2>&1
-
 REM loop through the PDF by pagenumber & split them up 
 set count=1
 for /l %%c in (1,%pagesplit%,%pages%) do (
@@ -53,6 +50,7 @@ for /l %%c in (1,%pagesplit%,%pages%) do (
   REM actually perform the split using cpdf
   echo Splitting pages %%c to !pagelim! from %input%
   "%cpdf%" "%input%" %%c-!pagelim! -o "%srcdir%splitpdf-!zcount!.pdf" 2>NUL
+  
   REM if you're using pdftk change the line to below
   REM "%pdftk%" "%input%" cat %%c-!pagelim! output "%srcdir%splitpdf-!count!-!newtime!.pdf"
 
